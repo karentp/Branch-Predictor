@@ -12,6 +12,7 @@ class Gshared:
             self.global_history_size = self.bits_to_index
         else:
             self.global_history_size = global_history_size
+        self.max_number_history_size = 2 ** self.global_history_size
         self.total_predictions = 0
         self.total_taken_pred_taken = 0
         self.total_taken_pred_not_taken = 0
@@ -36,8 +37,8 @@ class Gshared:
         print("\t% predicciones correctas:\t\t\t\t"+str(formatted_perc)+"%")
 
     def predict(self, PC):
-        last_n_bits_pc = int(PC) & ((2 ** self.bits_to_index)-1) # Mascara AND de la cantidad de bits que se quieren
-        hash_key = last_n_bits_pc ^ self.global_history
+        #last_n_bits_pc = int(PC) & ((2 ** self.bits_to_index)-1) # Mascara AND de la cantidad de bits que se quieren
+        hash_key = (int(PC) % self.size_of_branch_table) ^ (self.global_history % self.global_history_size)
         branch_table_entry = self.branch_table[hash_key]
         if branch_table_entry in [0, 1]:
             return "N"
@@ -45,8 +46,8 @@ class Gshared:
             return "T"
 
     def update(self, PC, result, prediction):
-        last_n_bits_pc = int(PC) & ((2 ** self.bits_to_index)-1) # Mascara AND de la cantidad de bits que se quieren
-        hash_key = last_n_bits_pc ^ self.global_history
+        #last_n_bits_pc = int(PC) & ((2 ** self.bits_to_index)-1) # Mascara AND de la cantidad de bits que se quieren
+        hash_key =  (int(PC) % self.size_of_branch_table)  ^ (self.global_history % self.global_history_size)
         branch_table_entry = self.branch_table[hash_key]
 
         #Update entry accordingly
@@ -57,7 +58,7 @@ class Gshared:
             updated_branch_table_entry = branch_table_entry -1 # Se resta 1 por que no se tomo y aun no es 0
 
         elif branch_table_entry == 3 and result == "T":
-            updated_branch_table_entry = branch_table_entry -1 # Se mantiene porque se tomo
+            updated_branch_table_entry = branch_table_entry  # Se mantiene porque se tomo
 
         else:
             updated_branch_table_entry = branch_table_entry + 1 #En otro caso se tomo y aun no es 3
@@ -65,12 +66,9 @@ class Gshared:
         self.branch_table[hash_key] = updated_branch_table_entry
         
         # Update global history
-
-        if result == "N":
-            self.global_history = ((self.global_history & ((2 ** self.global_history_size)-1)) << 1) # Si no se tomo se agrega un 0 en el LSB
-        else:
-            self.global_history = ((self.global_history & ((2 ** self.global_history_size)-1)) << 1) + 1 # Si se tomo se agrega un 1 en el LSB
-
+        self.global_history = ((self.global_history % (self.global_history_size-1)) << 1) # Si no se tomo se agrega un 0 en el LSB
+        if result != "N":
+            self.global_history +=1 
 
         #Update stats
         if result == "T" and result == prediction:
