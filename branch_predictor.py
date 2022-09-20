@@ -2,6 +2,7 @@ from optparse import OptionParser
 import gzip
 from bimodal import *
 from gshared import *
+from pshared import *
 
 parser = OptionParser()
 parser.add_option("-s", dest="bits_to_index")
@@ -19,6 +20,10 @@ if options.branch_predictor_type == "0":
 
 if options.branch_predictor_type == "1":
     branch_predictor = Gshared(int(options.bits_to_index), int(options.global_history_size))
+    #branch_predictor.print_info()
+
+if options.branch_predictor_type == "2":
+    branch_predictor = Pshared(int(options.bits_to_index), int(options.local_history_size))
     #branch_predictor.print_info()
 
 branch_predictor.print_info()
