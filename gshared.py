@@ -37,8 +37,8 @@ class Gshared:
         print("\t% predicciones correctas:\t\t\t\t"+str(formatted_perc)+"%")
 
     def predict(self, PC):
-        pc = (int(PC) % self.size_of_branch_table)
-        gh = (self.global_history % self.global_history_size)
+        pc = (int(PC) & (self.size_of_branch_table-1)) 
+        gh = (self.global_history % (self.max_number_history_size))
         hash_key = (pc ^ gh) % self.size_of_branch_table
         branch_table_entry = self.branch_table[hash_key] % 4
         if branch_table_entry in [0, 1]:
@@ -48,10 +48,12 @@ class Gshared:
 
     def update(self, PC, result, prediction):
         #last_n_bits_pc = int(PC) & ((2 ** self.bits_to_index)-1) # Mascara AND de la cantidad de bits que se quieren
-        hash_key =  (int(PC) % self.size_of_branch_table)  ^ (self.global_history % self.global_history_size)
+        global_history = self.global_history % self.max_number_history_size
+        hash_key =  ((int(PC) & (self.size_of_branch_table-1))  ^ global_history)% self.size_of_branch_table
         branch_table_entry = self.branch_table[hash_key] % 4
 
         #Update entry accordingly
+        
         if branch_table_entry == 0 and result == "N":
             updated_branch_table_entry = branch_table_entry  #Se mantiene porque no se  tomo
 
