@@ -24,6 +24,12 @@ class Pshared:
         print("\tEntradas en el Predictor:\t\t\t\t"+str(2**self.bits_to_index))
         print("\tEntradas en la Historia Global:\t\t\t\t"+str(self.local_history_size))
 
+    def print_info_tournament(self):
+        print("\tSobre el predictor Local:")
+        print("\t\tEntradas en el History Table:\t\t\t\t"+str(2**self.bits_to_index))
+        print("\t\tTamaño de los registros de historia local:\t\t"+str(self.local_history_size))
+        print("\t\tEntradas en el Pattern Table:\t\t\t\t"+str(2**self.local_history_size))
+
     def print_stats(self):
         print("Resultados de la simulación")
         print("\t# branches:\t\t\t\t\t\t"+str(self.total_predictions))

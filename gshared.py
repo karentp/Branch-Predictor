@@ -23,7 +23,12 @@ class Gshared:
         print("Parámetros del predictor:")
         print("\tTipo de predictor:\t\t\t\tG-Shared")
         print("\tEntradas en el Predictor:\t\t\t\t"+str(2**self.bits_to_index))
-        print("\tEntradas en la Historia Global:\t\t\t\t"+str(self.global_history_size))
+        print("\tTamaño de los registros de historia global:\t\t\t\t"+str(self.global_history_size))
+    
+    def print_info_tournament(self):
+        print("\tSobre el predictor Global:")
+        print("\t\tEntradas en el Predictor Global:\t\t\t"+str(2**self.bits_to_index))
+        print("\t\tTamaño de los registros de historia global:\t\t"+str(self.global_history_size))
 
     def print_stats(self):
         print("Resultados de la simulación")

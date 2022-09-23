@@ -3,6 +3,8 @@ import gzip
 from bimodal import *
 from gshared import *
 from pshared import *
+from tournament import *
+
 
 parser = OptionParser()
 parser.add_option("-s", dest="bits_to_index")
@@ -16,15 +18,19 @@ parser.add_option("-t", dest="TRACE_FILE", default="./branch-trace-gcc.trace.gz"
 is_tournament = False
 if options.branch_predictor_type == "0":
     branch_predictor = bimodal(int(options.bits_to_index))
-    #branch_predictor.print_info()
 
 if options.branch_predictor_type == "1":
     branch_predictor = Gshared(int(options.bits_to_index), int(options.global_history_size))
-    #branch_predictor.print_info()
+
 
 if options.branch_predictor_type == "2":
     branch_predictor = Pshared(int(options.bits_to_index), int(options.local_history_size))
-    #branch_predictor.print_info()
+
+if options.branch_predictor_type == "3":
+    is_tournament = True
+    pshared_branch_predictor = Pshared(int(options.bits_to_index), int(options.local_history_size))
+    gshared_branch_predictor = Gshared(int(options.bits_to_index), int(options.global_history_size))
+    branch_predictor = Tournament(pshared_branch_predictor, gshared_branch_predictor)
 
 branch_predictor.print_info()
 
