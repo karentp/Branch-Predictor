@@ -14,7 +14,7 @@ class bimodal:
     def print_info(self):
         print("Parámetros del predictor:")
         print("\tTipo de predictor:\t\t\t\tBimodal")
-        print("\tEntradas en el Predictor:\t\t\t\t\t"+str(2**self.bits_to_index))
+        print("\tEntradas en el Predictor:\t\t\t"+str(2**self.bits_to_index))
 
     def print_stats(self):
         print("Resultados de la simulación")
@@ -23,7 +23,7 @@ class bimodal:
         print("\t# branches tomados predichos incorrectamente:\t\t"+str(self.total_taken_pred_not_taken))
         print("\t# branches no tomados predichos correctamente:\t\t"+str(self.total_not_taken_pred_not_taken))
         print("\t# branches no tomados predichos incorrectamente:\t"+str(self.total_not_taken_pred_taken))
-        perc_correct = 100*(self.total_taken_pred_taken+self.total_not_taken_pred_not_taken)/self.total_predictions
+        perc_correct = 100*(float(self.total_taken_pred_taken+self.total_not_taken_pred_not_taken))/float(self.total_predictions)
         formatted_perc = "{:.3f}".format(perc_correct)
         print("\t% predicciones correctas:\t\t\t\t"+str(formatted_perc)+"%")
 
